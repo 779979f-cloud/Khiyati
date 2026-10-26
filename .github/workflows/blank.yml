@@ -19,10 +19,12 @@ jobs:
         java-version: '17'
 
     - name: Grant execute permission for gradlew
-      run: chmod +x ./Khiyati/gradlew
+      working-directory: ./Khiyati
+      run: chmod +x gradlew
 
     - name: Build APK with Gradle
-      run: ./Khiyati/gradlew assembleDebug
+      working-directory: ./Khiyati
+      run: ./gradlew assembleDebug
       
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
