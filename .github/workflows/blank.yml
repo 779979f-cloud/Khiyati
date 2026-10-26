@@ -18,16 +18,21 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Grant execute permission for gradlew
-      working-directory: ./Khiyati
-      run: chmod +x gradlew
+    - name: Find and build APK
+      run: |
+        GRADLEW_PATH=$(find . -name "gradlew" -type f -print -quit)
+        if [ -z "$GRADLEW_PATH" ]; then
+          echo "Error: gradlew file not found!"
+          exit 1
+        fi
+        PROJECT_DIR=$(dirname "$GRADLEW_PATH")
+        echo "Found gradlew at: $GRADLEW_PATH"
+        cd "$PROJECT_DIR"
+        chmod +x gradlew
+        ./gradlew assembleDebug
 
-    - name: Build APK with Gradle
-      working-directory: ./Khiyati
-      run: ./gradlew assembleDebug
-      
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
-        path: ./Khiyati/app/build/outputs/apk/debug/app-debug.apk
+        path: "**/app/build/outputs/apk/debug/app-debug.apk"
